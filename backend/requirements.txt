@@ -1,0 +1,15 @@
+fastapi
+uvicorn[all]
+python-dotenv
+psycopg2-binary
+langchain>=0.1.0 # Specify minimum version
+langchain-core>=0.1.7 # Specify minimum version
+langchain-ollama
+langchain-huggingface
+langchain-postgres>=0.1.0 # Explicitly request the version we need
+langchain-text-splitters
+google-auth
+python-jose[cryptography]
+PyPDF2
+SQLAlchemy
+sentence-transformers

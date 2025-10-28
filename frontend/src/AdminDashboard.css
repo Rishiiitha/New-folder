@@ -1,0 +1,218 @@
+/* Body */
+.admin-body {
+  background: linear-gradient(135deg, #10172a, #1b2439);
+  min-height: 100vh;
+  color: #9f9ff7;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Header */
+.admin-header {
+  background: linear-gradient(135deg, #243b55, #141e30);
+  color: rgb(243, 222, 222);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.logout-button {
+  background: #ff4b5c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s, transform 0.2s;
+}
+.logout-button:hover {
+  background: #ff2e44;
+  transform: scale(1.05);
+}
+
+/* Summary Section */
+.summary-section {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 30px 0;
+}
+
+.summary-card {
+  width: 220px;
+  background: #1e2a47;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+.summary-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+.summary-card h3 {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+.summary-card p {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 8px;
+}
+.summary-card.admin { background: linear-gradient(135deg, #4b6cb7, #182848); }
+.summary-card.parent { background: linear-gradient(135deg, #43cea2, #185a9d); }
+.summary-card.user { background: linear-gradient(135deg, #ff9966, #ff5e62); }
+
+/* Main Content */
+.admin-main {
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Cards and layout */
+.admin-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  column-gap: 50px;
+  row-gap: 40px;
+}
+
+.admin-card {
+  background: #c7dbde;
+  color: #333;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  padding: 25px;
+  margin-bottom: 25px;
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+}
+.admin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #4b6cb7;
+  padding-bottom: 10px;
+  color: #fff;
+}
+
+.admin-card h3 {
+  color: #243b55;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+/* Buttons and Inputs */
+.admin-card input[type="file"],
+.admin-card input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.admin-card button {
+  background: #4b6cb7;
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+.admin-card button:hover {
+  background: #3c5a99;
+}
+.admin-card button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* Document List */
+.doc-list {
+  list-style: none;
+  padding: 0;
+}
+.doc-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+.doc-list li:last-child {
+  border-bottom: none;
+}
+.delete-btn {
+  background: #ff4b5c !important;
+  font-size: 0.9rem !important;
+  padding: 5px 10px !important;
+  border-radius: 6px;
+}
+.delete-btn:hover {
+  background: #e03546 !important;
+}
+
+/* Danger Zone */
+.danger-zone {
+  border: 2px solid #f44336;
+}
+.danger-zone h3 {
+  color: #f44336;
+}
+.delete-all-btn {
+  background: #f44336 !important;
+  width: 100%;
+}
+.delete-all-btn:hover {
+  background: #d32f2f !important;
+}
+
+/* User Table */
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.user-table th,
+.user-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+.user-table th {
+  background: #f4f6fc;
+}
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}
+.status-dot.online {
+  background: #4caf50;
+}
+.status-dot.offline {
+  background: #bbb;
+}
+
+/* Message Banner */
+.admin-message {
+  background: #e3f2fd;
+  color: #1e88e5;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+}

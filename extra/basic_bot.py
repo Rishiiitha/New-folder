@@ -1,7 +1,4 @@
-# filename: api.py
 import os
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
@@ -10,30 +7,47 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_postgres import PGVector
 
 # --- 1. Setup Database Connection ---
+# Make sure to update this with your real details
 DB_CONNECTION_STRING = "postgresql+psycopg://postgres:Veeraragava@localhost:5432/Knowledge_base"
 COLLECTION_NAME = "New_embeddings"
 
 # --- 2. Initialize Components ---
+
+print("Initializing models and embeddings...")
 llm = OllamaLLM(model="llama3.1")
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
+print("Setting up vector store...")
+# Connect to your existing PGVector store
 try:
     store = PGVector(
         connection=DB_CONNECTION_STRING,
         collection_name=COLLECTION_NAME,
-        embeddings=embeddings,
+        embeddings=embeddings, 
     )
+    
     retriever = store.as_retriever(
         search_type="similarity",
         search_kwargs={"k": 5}
     )
-except Exception as e:
-    raise RuntimeError(f"Error connecting to vector store: {e}")
+    print("Vector store connected successfully.")
 
-# --- 3. Define Helper Functions and RAG Chain ---
+except Exception as e:
+    print(f"Error connecting to vector store: {e}")
+    print("Please ensure your PostgreSQL server is running, the 'pgvector' extension is enabled,")
+    print("and the connection string is correct and uses the 'psycopg' driver.")
+    exit()
+
+
+# --- 3. Define the RAG Chain using LCEL ---
+
+#
+# *** THIS IS THE MISSING FUNCTION ***
+#
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
+# NEW, STRICT, VOICE-READY TEMPLATE
 template = """
 You are a helpful AI assistant for a college, answering questions for students and parents.
 You MUST follow these rules in EVERY response:
@@ -67,9 +81,11 @@ Answer:
 """
 prompt = ChatPromptTemplate.from_template(template)
 
+print("Building RAG chain...")
+# This line will now work because format_docs is defined above
 rag_chain = (
     RunnableParallel(
-        context=(retriever | format_docs),
+        context=(retriever | format_docs), 
         question=RunnablePassthrough()
     )
     | prompt
@@ -77,12 +93,12 @@ rag_chain = (
     | StrOutputParser()
 )
 
-# --- 4. FastAPI Setup ---
-app = FastAPI(title="College RAG Chatbot API")
+print("Chatbot is ready! Type 'exit' to quit.\n")
 
-class QueryRequest(BaseModel):
-    question: str
 
+# --- 4. Run the Chatbot ---
+
+# Define conversational words to intercept
 filler_inputs = {
     "ok": "Got it. Do you have another question?",
     "okay": "Got it. Do you have another question?",
@@ -91,18 +107,31 @@ filler_inputs = {
     "got it": "Great. Let me know if you have any other questions."
 }
 
-@app.post("/ask")
-async def ask_question(request: QueryRequest):
-    query = request.question.strip()
-    if not query:
-        raise HTTPException(status_code=400, detail="Question cannot be empty")
-    
-    clean_query = query.lower().strip(" .!")
-    if clean_query in filler_inputs:
-        return {"answer": filler_inputs[clean_query]}
-    
+while True:
     try:
-        answer = "".join(rag_chain.stream(query))
-        return {"answer": answer}
+        query = input("You: ")
+        
+        if query.lower() == 'exit':
+            break
+        
+        # Check if the input is a simple filler word
+        clean_query = query.lower().strip(" .!")
+        if clean_query in filler_inputs:
+            print(f"\nBot: {filler_inputs[clean_query]}\n")
+            continue  # Skip the RAG chain and ask for new input
+
+        if not query.strip():
+            continue
+
+        print("\nBot: ", end="", flush=True)
+        
+        for chunk in rag_chain.stream(query):
+            print(chunk, end="", flush=True)
+        
+        print("\n")
+
+    except KeyboardInterrupt:
+        print("\nExiting...")
+        break
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"\nAn error occurred: {e}")

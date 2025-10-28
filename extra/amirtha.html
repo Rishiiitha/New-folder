@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Manager</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, button { margin: 5px 0; }
+    .section { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
+    .results { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Document Manager</h1>
+
+  <!-- Upload Section -->
+  <div class="section">
+    <h2>Upload File</h2>
+    <input type="file" id="fileInput" />
+    <input type="text" id="urlInput" placeholder="Optional URL" />
+    <input type="text" id="dirInput" placeholder="Optional Directory" />
+    <button onclick="uploadFile()">Upload</button>
+    <div id="uploadResult" class="results"></div>
+  </div>
+
+  <!-- List Section -->
+  <div class="section">
+    <h2>List Documents</h2>
+    <button onclick="listDocuments()">List All</button>
+    <div id="listResult" class="results"></div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="section">
+    <h2>Search Documents</h2>
+    <input type="text" id="queryInput" placeholder="Search query" />
+    <button onclick="searchDocuments()">Search</button>
+    <div id="searchResult" class="results"></div>
+  </div>
+
+  <!-- Delete Section -->
+  <div class="section">
+    <h2>Delete Document</h2>
+    <input type="text" id="deleteIdInput" placeholder="Document ID to delete" />
+    <button onclick="deleteDocument()">Delete</button>
+    <div id="deleteResult" class="results"></div>
+  </div>
+
+<script>
+  const BASE_URL = "http://127.0.0.1:8000";
+
+  async function uploadFile() {
+    const file = document.getElementById("fileInput").files[0];
+    const url = document.getElementById("urlInput").value;
+    const dir = document.getElementById("dirInput").value;
+
+    if (!file) return alert("Select a file to upload");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("url", url);
+    formData.append("directory", dir);
+
+    try {
+      const res = await fetch(`${BASE_URL}/upload/`, {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      document.getElementById("uploadResult").innerText = JSON.stringify(data, null, 2);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function listDocuments() {
+    try {
+      const res = await fetch(`${BASE_URL}/list/`);
+      const data = await res.json();
+      document.getElementById("listResult").innerText = JSON.stringify(data, null, 2);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function searchDocuments() {
+    const query = document.getElementById("queryInput").value;
+    if (!query) return alert("Enter a search query");
+
+    try {
+      const res = await fetch(`${BASE_URL}/search/?query=${encodeURIComponent(query)}`);
+      const data = await res.json();
+      document.getElementById("searchResult").innerText = JSON.stringify(data, null, 2);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function deleteDocument() {
+    const docId = document.getElementById("deleteIdInput").value;
+    if (!docId) return alert("Enter document ID to delete");
+
+    try {
+      const res = await fetch(`${BASE_URL}/delete/?doc_id=${encodeURIComponent(docId)}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      document.getElementById("deleteResult").innerText = JSON.stringify(data, null, 2);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+</script>
+
+</body>
+</html>

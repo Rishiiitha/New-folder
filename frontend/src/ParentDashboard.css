@@ -1,0 +1,148 @@
+/* --- Main Layout --- */
+.dashboard-container {
+  width: 100%;
+  min-height: 100vh;
+  /* Use a slightly off-white, clean background */
+  background-color: #f6f6f7; 
+}
+
+.dashboard-content {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Softer shadow */
+}
+
+/* --- Hamburger Button --- */
+.sidebar-toggle-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+  padding: 0 10px;
+  margin-right: 10px;
+}
+
+.sidebar-toggle-button:hover {
+  color: #000; /* Use black for hover on system theme */
+}
+
+.dashboard-title {
+  flex-grow: 1;
+}
+.dashboard-title h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  /* Inherits the clean font from index.css */
+}
+.dashboard-title .welcome-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555; /* Slightly darker gray */
+}
+
+/* --- Main Content Area --- */
+.dashboard-main {
+  flex-grow: 1; 
+  padding: 20px;
+}
+
+.dashboard-section {
+  margin-bottom: 25px;
+}
+.dashboard-section h2 {
+  font-size: 1.5rem;
+  color: #111; /* Darker title */
+  margin-bottom: 15px;
+}
+
+/* --- Student Card Styling --- */
+.student-card {
+  background: #ffffff;
+  border-radius: 8px;
+  /* Softer, more modern shadow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
+  overflow: hidden;
+  max-width: 800px;
+}
+
+.student-header {
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.student-header h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #111;
+}
+.student-header .student-email {
+  margin: 5px 0 0;
+  font-size: 0.9rem;
+  color: #555;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace; /* Uses code font */
+}
+
+.student-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+.detail-item strong {
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+.detail-item span {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #222;
+}
+
+/* Special color for the balance */
+.detail-item.balance span {
+  color: #111; /* Changed from green to strong dark text */
+  font-weight: 700;
+}
+
+.no-students {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* --- Footer --- */
+.dashboard-footer {
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+  background: #ffffff;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* --- Loading Spinner --- */
+.dashboard-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.5rem;
+  color: #555;
+}
