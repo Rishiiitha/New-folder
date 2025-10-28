@@ -5,6 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* This is the new base background color */
+  background-color: #f6f6f7;
 }
 
 code {

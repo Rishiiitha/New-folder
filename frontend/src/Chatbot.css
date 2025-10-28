@@ -1,117 +1,22 @@
-/* Container for the whole bot */
-.chatbot-container {
-    width: 100%;
-    max-width: 800px;
-    margin: 20px auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    background: #f9f9f9;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
-  
-  .chatbot-container h3 {
-    background-color: #4a5a6e; /* A nice blue header */
-    color: white;
-    padding: 16px;
-    margin: 0;
-    text-align: center;
-  }
-  
-  /* The window showing all messages */
-  .chat-window {
-    padding: 16px;
-    height: 400px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: white;
-  }
-  
-  /* Individual message bubble */
-  .chat-message {
-    padding: 10px 14px;
-    border-radius: 18px;
-    max-width: 80%;
-    word-wrap: break-word;
-  }
-  
-  /* Bot's message style */
-  .chat-message.bot {
-    background-color: #f1f0f0;
-    color: #333;
-    align-self: flex-start;
-    border-bottom-left-radius: 4px;
-  }
-  
-  /* User's message style */
-  .chat-message.user {
-    background-color: #007bff;
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
-  }
-  
-  /* Typing indicator */
-  .chat-message.bot.loading {
-    padding: 16px 14px;
-  }
-  .typing-indicator span {
-    height: 8px;
-    width: 8px;
-    background-color: #999;
-    border-radius: 50%;
-    display: inline-block;
-    animation: bounce 1.3s infinite;
-    margin: 0 2px;
-  }
-  .typing-indicator span:nth-child(2) { animation-delay: 0.1s; }
-  .typing-indicator span:nth-child(3) { animation-delay: 0.2s; }
-  
-  @keyframes bounce {
-    0%, 60%, 100% { transform: translateY(0); }
-    30% { transform: translateY(-6px); }
-  }
-  
-  /* Input form at the bottom */
-  .chat-form {
-    display: flex;
-    border-top: 1px solid #ddd;
-    padding: 10px;
-    background: #f9f9f9;
-  }
-  
-  .chat-form input[type="text"] {
-    flex-grow: 1;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    padding: 10px 15px;
-    font-size: 1rem;
-  }
-  
-  .chat-form button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    padding: 0 10px;
-    font-size: 1.5rem;
-    color: #007bff;
-    transition: transform 0.2s;
-  }
-  .chat-form button:hover {
-    transform: scale(1.1);
-  }
-  
-  .mic-button.listening {
-    color: #e63946;
-    animation: pulse 1s infinite;
-  }
-  
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-  }
+/* --- Add these styles to your Chatbot.css --- */
+
+.stop-button {
+  width: 44px; /* Match send-button */
+  height: 44px; /* Match send-button */
+  border-radius: 50%;
+  border: none;
+  background-color: #d32f2f; /* Darker red */
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+  flex-shrink: 0;
+}
+
+.stop-button:hover {
+  background-color: #b71c1c;
+}

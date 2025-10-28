@@ -2,8 +2,6 @@
 .dashboard-container {
   width: 100%;
   min-height: 100vh;
-  /* Use a slightly off-white, clean background */
-  background-color: #f6f6f7; 
 }
 
 .dashboard-content {
@@ -11,6 +9,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* This ensures the sidebar doesn't push the content */
+  margin-left: 0; 
 }
 
 .dashboard-header {
@@ -19,7 +19,7 @@
   padding: 15px 20px;
   background: #ffffff;
   border-bottom: 1px solid #e0e0e0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Softer shadow */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 /* --- Hamburger Button --- */
@@ -34,7 +34,7 @@
 }
 
 .sidebar-toggle-button:hover {
-  color: #000; /* Use black for hover on system theme */
+  color: #000; 
 }
 
 .dashboard-title {
@@ -43,12 +43,11 @@
 .dashboard-title h1 {
   margin: 0;
   font-size: 1.75rem;
-  /* Inherits the clean font from index.css */
 }
 .dashboard-title .welcome-text {
   margin: 0;
   font-size: 0.9rem;
-  color: #555; /* Slightly darker gray */
+  color: #555;
 }
 
 /* --- Main Content Area --- */
@@ -62,7 +61,7 @@
 }
 .dashboard-section h2 {
   font-size: 1.5rem;
-  color: #111; /* Darker title */
+  color: #111;
   margin-bottom: 15px;
 }
 
@@ -70,7 +69,6 @@
 .student-card {
   background: #ffffff;
   border-radius: 8px;
-  /* Softer, more modern shadow */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
   overflow: hidden;
   max-width: 800px;
@@ -89,7 +87,7 @@
   margin: 5px 0 0;
   font-size: 0.9rem;
   color: #555;
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace; /* Uses code font */
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 .student-details {
@@ -116,9 +114,8 @@
   color: #222;
 }
 
-/* Special color for the balance */
 .detail-item.balance span {
-  color: #111; /* Changed from green to strong dark text */
+  color: #111; /* Strong dark text */
   font-weight: 700;
 }
 

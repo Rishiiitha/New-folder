@@ -2,7 +2,6 @@
 .sidebar {
   width: 250px;
   height: 100vh;
-  /* Slightly lighter background than the main page */
   background-color: #fdfdfd; 
   border-right: 1px solid #e0e0e0;
   
@@ -14,12 +13,15 @@
   left: 0;
   z-index: 1000;
   
-  transform: translateX(-250px);
+  /* Hides sidebar off-screen */
+  transform: translateX(-250px); 
   transition: transform 0.3s ease-in-out;
 }
 
+/* This class shows the sidebar */
 .sidebar.open {
-  transform: translateX(0);
+  transform: translateX(0); 
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 /* --- Header (Title + Close Button) --- */
@@ -34,14 +36,14 @@
 .sidebar-header h3 {
   margin: 0;
   font-size: 1.5rem;
-  color: #111; /* Dark text */
+  color: #111;
 }
 
 .sidebar-close-button {
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #666; /* Gray icon */
+  color: #666;
   cursor: pointer;
   padding: 0;
 }
@@ -49,9 +51,10 @@
 /* --- Navigation Menu --- */
 .sidebar-menu {
   list-style: none;
-  padding: 20px 0;
+  padding: 0;
   margin: 0;
   flex-grow: 1; 
+  overflow-y: auto; /* Allows history to scroll */
 }
 
 .sidebar-item {
@@ -59,19 +62,22 @@
   align-items: center;
   padding: 12px 20px;
   font-size: 1rem;
-  color: #444; /* Dark gray text */
+  color: #444;
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar-item:hover {
-  background-color: #f0f0f0; /* Light gray hover */
+  background-color: #f0f0f0; 
 }
 
-/* Highlights the current page */
+/* Highlights the current page (Dashboard, Settings, etc) */
 .sidebar-item.active {
-  color: #000; /* Black for active item */
+  color: #000; 
   font-weight: 600;
 }
 
@@ -79,6 +85,37 @@
   margin-right: 15px;
   width: 20px;
   text-align: center;
+  flex-shrink: 0; /* Prevents icon from shrinking */
+}
+
+/* --- Session History List --- */
+.sidebar-divider {
+  padding: 10px 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  margin-top: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.session-item {
+  padding-left: 20px; /* Aligns with other items */
+}
+
+/* Highlights the *active chat session* */
+.session-item.active-session {
+  background-color: #e9ecef;
+  font-weight: 600;
+}
+
+.session-title {
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(100% - 35px); /* Full width minus icon */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* --- Footer (Logout Button) --- */
@@ -94,9 +131,8 @@
   width: 100%;
   padding: 10px;
   font-size: 1rem;
-  /* Changed from bright red to a neutral dark gray */
   color: #fff;
-  background-color: #444; 
+  background-color: #444; /* Neutral dark logout */
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -104,5 +140,5 @@
 }
 
 .sidebar-logout-button:hover {
-  background-color: #111; /* Black on hover */
+  background-color: #111; 
 }
