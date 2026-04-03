@@ -1,8 +1,8 @@
 import os
 import uuid
 import logging
-import psycopg  # For direct SQL operations
-import fitz     # For PyMuPDF
+import psycopg  
+import fitz     
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 from langchain_postgres import PGVector
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -10,23 +10,17 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from dotenv import load_dotenv
 
-# --- IMPORT YOUR ADMIN SECURITY ---
 from auth_routes import get_current_admin_user
 
-# --- LOAD .ENV VARIABLES ---
 load_dotenv()
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_NAME = os.getenv("DB_NAME", "your_db_name")
 DB_USER = os.getenv("DB_USER", "your_db_user")
 DB_PASS = os.getenv("DB_PASS", "your_db_password")
 
-# This string is for LangChain (SQLAlchemy)
 DB_CONNECTION_STRING = f"postgresql+psycopg://{DB_USER}:{DB_PASS}@{DB_HOST}:5432/{DB_NAME}"
 COLLECTION_NAME = "New_embeddings" 
 
-# --- SETUP COMPONENTS ---
-# <-- NOTE: To "Refine the embedding model", you would fine-tune a model
-# and change the 'model_name' here to your new model.
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 try:
@@ -40,18 +34,12 @@ except Exception as e:
     print(f"Error connecting to PGVector in ingest.py: {e}")
     raise RuntimeError(e)
 
-# --- SETUP LOGGER ---
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# --- FASTAPI ROUTER ---
 router = APIRouter()
 
-# --- HELPERS ---
-# <-- MODIFIED: We removed the old `extract_text_from_pdf` helper
-# as we now process the PDF page-by-page inside the upload route.
 
-# --- ROUTES (NOW SECURED) ---
 @router.post("/upload/")
 async def upload_file(
     file: UploadFile = File(...),
@@ -68,20 +56,16 @@ async def upload_file(
         with open(file_path, "wb") as f:
             f.write(await file.read())
 
-        # <-- MODIFIED: Start of new structured extraction logic
         page_documents = []
         doc_metadata = {}
 
         try:
             with fitz.open(file_path) as doc:
-                # Extract document-level metadata
                 doc_metadata = doc.metadata
                 
                 for page_num, page in enumerate(doc.pages()):
                     page_text = page.get_text()
-                    if page_text.strip(): # Only process pages with text
-                        
-                        # Create rich metadata for each page
+                    if page_text.strip(): 
                         page_meta = {
                             "source": file.filename,
                             "page_number": page_num + 1,
@@ -89,8 +73,6 @@ async def upload_file(
                             "doc_author": doc_metadata.get('author', 'N/A'),
                             "doc_creation_date": doc_metadata.get('creationDate', 'N/A')
                         }
-                        
-                        # Create a Document object for the *entire page*
                         page_documents.append(
                             Document(
                                 page_content=page_text,
@@ -104,12 +86,9 @@ async def upload_file(
         if not page_documents:
             raise HTTPException(status_code=400, detail="No readable text in PDF")
 
-        # <-- MODIFIED: We now use `split_documents` on our page list
-        # This is better than splitting one giant text blob.
         splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         final_chunks = splitter.split_documents(page_documents)
 
-        # Add a unique chunk_id to each chunk's metadata for deletion
         for chunk in final_chunks:
             chunk.metadata["chunk_id"] = str(uuid.uuid4())
 
@@ -120,8 +99,6 @@ async def upload_file(
             "message": f"Uploaded {len(final_chunks)} chunks from {file.filename}",
             "document_metadata": doc_metadata
         }
-        # <-- MODIFIED: End of new logic
-
     except Exception as e:
         logger.error(f"Upload error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -162,7 +139,6 @@ async def search_documents(
     try:
         results = VECTOR_DB.similarity_search(query, k=5)
         
-        # <-- RECOMMENDATION: Implement de-duplication here
         seen_content = set()
         unique_results = []
         for doc in results:
@@ -174,12 +150,11 @@ async def search_documents(
         return [
             {
                 "source": doc.metadata.get("source"),
-                # <-- MODIFIED: Also show new metadata in search preview
                 "page": doc.metadata.get("page_number"),
                 "title": doc.metadata.get("doc_title"),
                 "preview": doc.page_content[:250],
             }
-            for doc in unique_results # Use the de-duplicated list
+            for doc in unique_results 
         ]
     except Exception as e:
         logger.error(f"Failed to search documents: {e}")

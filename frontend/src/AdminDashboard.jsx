@@ -1,35 +1,29 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./AdminDashboard.css";
 
-// --- Helper function to get the auth token ---
 const getAuthToken = () => {
   const token = localStorage.getItem("access_token");
   if (!token) {
-    // If no token, force logout
     handleLogout();
     return null;
   }
   return token;
 };
 
-// --- Helper function to handle token expiration ---
 const handleApiError = (res) => {
   if (res.status === 401 || res.status === 403) {
-    // 401 Unauthorized or 403 Forbidden
     alert("Your session has expired or you lack permissions. Please log in again.");
     handleLogout();
-    return true; // Indicates an error was handled
+    return true;
   }
   return false;
 };
 
-// --- Helper function for logout ---
 const handleLogout = () => {
   localStorage.removeItem("access_token");
   window.location.href = "/login";
 };
 
-// --- API Base URL ---
 const API_URL = "http://127.0.0.1:8000";
 
 function AdminDashboard() {
@@ -40,10 +34,8 @@ function AdminDashboard() {
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
   
-  // --- USER COUNTS (now derived from 'users' state) ---
   const userCounts = users.reduce(
     (acc, user) => {
-      // Use 'student' instead of 'user' to match your role logic
       if (user.role === 'student') {
         acc.student = (acc.student || 0) + 1;
       } else {
@@ -54,7 +46,6 @@ function AdminDashboard() {
     { admin: 0, parent: 0, student: 0 }
   );
 
-  // --- FETCH DOCUMENTS ---
   const fetchDocuments = useCallback(async () => {
     const token = getAuthToken();
     if (!token) return;
@@ -79,7 +70,6 @@ function AdminDashboard() {
     }
   }, []);
 
-  // --- FETCH USERS ---
   const fetchUsers = useCallback(async () => {
     const token = getAuthToken();
     if (!token) return;
@@ -110,7 +100,6 @@ function AdminDashboard() {
 
   const handleFileChange = (e) => setSelectedFile(e.target.files[0]);
 
-  // --- UPLOAD FILE ---
   const handleUpload = async () => {
     const token = getAuthToken();
     if (!token) return;
@@ -148,7 +137,6 @@ function AdminDashboard() {
     }
   };
 
-  // --- SEARCH DOCUMENTS ---
   const handleSearch = async () => {
     const token = getAuthToken();
     if (!token) return;
@@ -179,7 +167,6 @@ function AdminDashboard() {
     }
   };
 
-  // --- DELETE DOCUMENT ---
   const handleDelete = async (filename) => {
     const token = getAuthToken();
     if (!token) return;
@@ -207,7 +194,6 @@ function AdminDashboard() {
     }
   };
 
-  // --- DELETE ALL DOCUMENTS ---
   const handleDeleteAll = async () => {
     const token = getAuthToken();
     if (!token) return;
@@ -239,13 +225,11 @@ function AdminDashboard() {
     <div className="admin-body">
       <header className="admin-header">
         <h1>Admin Dashboard</h1>
-        {/* We use the pre-defined handleLogout now */}
         <button className="logout-button" onClick={handleLogout}>
           Logout
         </button>
       </header>
 
-      {/* --- USER SUMMARY CARDS --- */}
       <section className="summary-section">
         <div className="summary-card admin">
           <h3>Admins</h3>
@@ -256,7 +240,6 @@ function AdminDashboard() {
           <p>{userCounts.parent}</p>
         </div>
         <div className="summary-card user">
-          {/* Changed "Users" to "Students" to match your roles */}
           <h3>Students</h3>
           <p>{userCounts.student}</p>
         </div>
@@ -266,7 +249,6 @@ function AdminDashboard() {
         {message && <div className="admin-message">{message}</div>}
 
         <div className="admin-grid">
-          {/* --- LEFT COLUMN: DOCUMENT MANAGEMENT --- */}
           <div className="doc-management">
             <h2>📄 Document Management</h2>
 
@@ -323,7 +305,6 @@ function AdminDashboard() {
             </div>
           </div>
 
-          {/* --- RIGHT COLUMN: USER STATUS --- */}
           <div className="user-status">
             <h2>👥 User Status</h2>
             <div className="admin-card">

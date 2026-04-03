@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Chatbot.css';
-
-// --- Helper Functions (Defined once at the top) ---
 const getAuthToken = () => {
   const token = localStorage.getItem("access_token");
   if (!token) {
-    window.location.href = '/login'; // Force logout
+    window.location.href = '/login';
     return null;
   }
   return token;
@@ -44,19 +42,16 @@ function Chatbot({ currentSessionId, setCurrentSessionId }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   
-  // --- State for the Pause Button ---
   const [abortController, setAbortController] = useState(null);
   
   const chatWindowRef = useRef(null);
 
-  // --- Auto-scroll to bottom ---
   useEffect(() => {
     if (chatWindowRef.current) {
       chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // --- **** MODIFIED: Load History based on Session ID **** ---
   useEffect(() => {
     const fetchHistory = async (sessionId) => {
       const token = getAuthToken();
@@ -85,15 +80,12 @@ function Chatbot({ currentSessionId, setCurrentSessionId }) {
     };
 
     if (currentSessionId) {
-      // This is an existing session, load its history
       fetchHistory(currentSessionId);
     } else {
-      // This is a "New Chat", just show the welcome message
       setMessages([{ sender: 'bot', text: 'Hi! How can I help you today?' }]);
     }
-  }, [currentSessionId]); // <-- This effect re-runs when you switch sessions!
+  }, [currentSessionId]);
 
-  // --- Core API Call Function (MODIFIED) ---
   const sendQuery = async (queryText) => {
     if (!queryText.trim()) return;
 
@@ -101,7 +93,6 @@ function Chatbot({ currentSessionId, setCurrentSessionId }) {
     setQuestion("");
     setMessages(prev => [...prev, { sender: 'user', text: queryText }]);
 
-    // --- 1. Create Abort Controller ---
     const controller = new AbortController();
     setAbortController(controller);
 
@@ -118,34 +109,28 @@ function Chatbot({ currentSessionId, setCurrentSessionId }) {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        // --- 2. Send the current session_id (or null for a new chat) ---
         body: JSON.stringify({ 
           question: queryText, 
           session_id: currentSessionId 
         }),
-        signal: controller.signal // --- 3. Add signal for aborting ---
+        signal: controller.signal
       });
 
       let botResponse = "";
       if (res.ok) {
         const data = await res.json();
         botResponse = data.answer;
-        
-        // --- 4. CRITICAL: If this was a new chat, update the session ID ---
         if (data.new_session_id) {
           setCurrentSessionId(data.new_session_id);
         }
       } else if (res.status === 401) {
-        // ... (error handling) ...
       } else {
-        // ... (error handling) ...
       }
       
       setMessages(prev => [...prev, { sender: 'bot', text: botResponse }]);
       speak(botResponse);
 
     } catch (error) {
-      // --- 5. Handle the abort error ---
       if (error.name === 'AbortError') {
         console.log("Fetch aborted by user.");
         setMessages(prev => [...prev, { sender: 'bot', text: "[Response stopped]" }]);
@@ -158,10 +143,9 @@ function Chatbot({ currentSessionId, setCurrentSessionId }) {
     }
     
     setIsLoading(false);
-    setAbortController(null); // --- 6. Clear the controller ---
+    setAbortController(null);
   };
 
-  // --- New Function: Handle Stop Button Click ---
   const handleStopClick = () => {
     if (abortController) {
       abortController.abort();
@@ -169,7 +153,6 @@ function Chatbot({ currentSessionId, setCurrentSessionId }) {
     }
   };
 
-  // --- (Your handleFormSubmit and handleListenClick functions... NO CHANGES NEEDED) ---
   const handleFormSubmit = (e) => {
     e.preventDefault();
     sendQuery(question);
@@ -190,7 +173,6 @@ function Chatbot({ currentSessionId, setCurrentSessionId }) {
     recognition.start();
   };
 
-  // --- MODIFIED JSX with Stop Button ---
   return (
     <div className="chatbot-container">
       <h3>🎤 Smart Voice Assistant</h3>
@@ -218,7 +200,6 @@ function Chatbot({ currentSessionId, setCurrentSessionId }) {
           disabled={isLoading}
         />
 
-        {/* --- This logic shows Stop button OR Mic button --- */}
         {isLoading ? (
           <button 
             type="button" 
